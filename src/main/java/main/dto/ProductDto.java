@@ -5,6 +5,7 @@
  */
 package main.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.List;
 import lombok.Data;
@@ -22,6 +23,7 @@ public class ProductDto implements Serializable {
     
     private String description;
     
+    @JsonIgnore
     private List<CartContentDto> cartcontent;
     
     

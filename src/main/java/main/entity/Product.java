@@ -5,6 +5,7 @@
  */
 package main.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,22 +24,19 @@ import lombok.Setter;
  * @author nicob
  */
 @Entity
-@Setter
+@Data
 public class Product implements Serializable {
 
     @Id
     //@Column(name="product_id",unique = true)
     @GeneratedValue(strategy=GenerationType.AUTO)
-    @Getter
     private Integer id;
     
-    @Getter
     private Integer quantity;
     
-    @Getter
     private String description;
     
-    @OneToMany(fetch=FetchType.LAZY, mappedBy = "product")   
+    @OneToMany(fetch=FetchType.LAZY, mappedBy = "product")
     private List<CartContent> cartcontent;
 
     //Constructors

@@ -22,16 +22,14 @@ import lombok.Setter;
  * @author nicob
  */
 @Entity
-@Setter
+@Data
 public class CartContent implements Serializable {
     
     @Id
     //@Column(name="cartcontent_id",unique = true)
     @GeneratedValue(strategy=GenerationType.AUTO)
-    @Getter
     private Integer id;
     
-    @Getter
     private Integer amount;
     
     //@OneToOne(fetch=FetchType.LAZY)
@@ -41,7 +39,6 @@ public class CartContent implements Serializable {
     
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="product_id")
-    @Getter
     private Product product;
 
     public CartContent() {

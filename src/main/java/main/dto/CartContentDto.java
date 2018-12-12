@@ -5,6 +5,7 @@
  */
 package main.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import lombok.Data;
 
@@ -19,6 +20,7 @@ public class CartContentDto implements Serializable {
     
     private Integer amount;
     
+    @JsonIgnore
     private CartDto cart;
     
     private ProductDto product;    

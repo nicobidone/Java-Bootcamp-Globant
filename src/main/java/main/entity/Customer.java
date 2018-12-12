@@ -33,7 +33,6 @@ public class Customer implements Serializable {
     private String lastName;
     
     @OneToMany(mappedBy = "customer")
-    @NonNull
     private List<Cart> carts;
 
     //Constructors

@@ -23,26 +23,22 @@ import lombok.NonNull;
 import lombok.Setter;
 
 @Entity
-@Setter
+@Data
 public class Cart implements Serializable {
     
     @Id
     //@Column(name="cart_id",unique = true)
     @GeneratedValue(strategy=GenerationType.AUTO)
-    @Getter
     private Integer id;
     
     @Column(nullable=false)
-    @Getter
     private String description;
     
     @OneToMany(fetch=FetchType.LAZY, mappedBy = "cart")
-    @Getter
     private List<CartContent> cartcontent;
     
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="customer_id")
-    @NonNull
     private Customer customer;
 
     public Cart() {
