@@ -5,11 +5,11 @@ package main;
 import main.repository.ProductRepository;
 import java.util.ArrayList;
 import java.util.List;
-import main.elements.Customer;
+import main.entity.Customer;
 import main.repository.*;
-import main.elements.Cart;
-import main.elements.CartContent;
-import main.elements.Product;
+import main.entity.Cart;
+import main.entity.CartContent;
+import main.entity.Product;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -39,8 +39,8 @@ public class ShoppingCartApplication {
                         
                         Cart ctg1 = new Cart("carniceria",lisCustomer.get(3));
                         Cart ctg2 = new Cart("verduleria",lisCustomer.get(3));
-                        lisCustomer.get(3).setCart(ctg2);
-                        lisCustomer.get(3).setCart(ctg1);
+                        lisCustomer.get(3).setCarts(java.util.Arrays.asList(ctg2));
+                        lisCustomer.get(3).setCarts(java.util.Arrays.asList(ctg1));
                         
                         List<Product> lisProduct1 = new ArrayList<>();
                         lisProduct1.add(new Product("Pavita sadia",10));
@@ -62,16 +62,16 @@ public class ShoppingCartApplication {
                         lisProduct1.forEach((product) -> {
                             CartContent cartContent = new CartContent(ctg1,product,3);
                             cc1.add(cartContent);
-                            ctg1.setCartcontent(cartContent);
-                            product.setCartcontent(cartContent);
+                            ctg1.setCartcontent(java.util.Arrays.asList(cartContent));
+                            product.setCartcontent(java.util.Arrays.asList(cartContent));
                         });
                         
                         List<CartContent> cc2 = new ArrayList<>();
                         lisProduct2.forEach((product) -> {
                             CartContent cartContent = new CartContent(ctg2,product,4);
                             cc2.add(cartContent);
-                            ctg2.setCartcontent(cartContent);
-                            product.setCartcontent(cartContent);                           
+                            ctg2.setCartcontent(java.util.Arrays.asList(cartContent));
+                            product.setCartcontent(java.util.Arrays.asList(cartContent));                           
                         });                        
                         
                         //Almaceno en repositorios                        
