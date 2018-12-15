@@ -8,14 +8,19 @@ package main.controllers;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
-import main.elements.Customer;
+import main.dto.CustomerDto;
+import main.entity.Customer;
 import main.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.modelmapper.ModelMapper;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  *
@@ -23,40 +28,53 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @Api(value = "Customers operations")
-@RequestMapping(value = "/customer")
 public class CustomerController {
     
+    @Autowired
     private CustomerService customerService;
     
     @Autowired
-    public void setCustomerService(CustomerService customerService){
-        this.customerService = customerService;
-    }
+    private ModelMapper modelMapper;
     
     @ApiOperation(value="View the complete list of customers")
-    @RequestMapping(value = "/all", method = RequestMethod.GET, produces = "application/json")
-    public List<Customer> listAllCustomers() throws SQLException, Exception{        
-        return this.customerService.listAllCustomers();
+    @RequestMapping(value = "customers/", method = RequestMethod.GET)
+    @ResponseBody
+    public List<CustomerDto> listAllCustomers(){        
+        List<CustomerDto> aux = new ArrayList<>();
+        this.customerService.listAllCustomers().forEach((customer)->{
+            aux.add(this.convertToDto(customer));
+        });
+        return aux;
     }
     
     @ApiOperation(value="View customers by code matching")
-    @RequestMapping(value = "/show/{id}", method = RequestMethod.GET)
-    public Customer showCustomer(@PathVariable Integer id){
-        return customerService.getCustomerById(id);        
+    @RequestMapping(value = "customers/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public CustomerDto showCustomer(@PathVariable Integer id){
+        return this.convertToDto(customerService.getCustomerById(id));        
     }
     
     @ApiOperation(value="Add a customer")
-    @RequestMapping(value = "/", method = RequestMethod.PUT)
-    public String addCustomer(Customer customer){
-        this.customerService.saveCustomer(customer);
-        return "Product added sucessfully";
+    @RequestMapping(value = "customer/", method = RequestMethod.PUT)
+    @ResponseBody
+    public List<CustomerDto> addCustomer(CustomerDto customer) throws ParseException{
+        this.customerService.saveCustomer(this.convertToEntity(customer));
+        return this.listAllCustomers();
     }
     
     @ApiOperation(value = "Remove a customer")
-    @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
-    public String deleteCustomer(@PathVariable Integer id){
+    @RequestMapping(value="customer/{id}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public List<CustomerDto> deleteCustomer(@PathVariable Integer id) {
         this.customerService.deleteCustomer(id);
-        return "Product remove successfully";
+        return this.listAllCustomers();
     }
     
+    private CustomerDto convertToDto(Customer customer) {
+        return modelMapper.map(customer, CustomerDto.class);
+    }
+    
+    private Customer convertToEntity(CustomerDto customerDto) throws ParseException {
+        return modelMapper.map(customerDto, Customer.class);
+    }
 }

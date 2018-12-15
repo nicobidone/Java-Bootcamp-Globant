@@ -7,18 +7,23 @@ package main.controllers;
  */
 
 
+import main.entity.Product;
+import main.entity.Cart;
+import main.entity.CartContent;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
-import main.elements.Cart;
-import main.elements.Product;
-import main.services.CartContentService;
-import main.services.CartService;
-import main.services.CustomerService;
+import main.dto.CartDto;
+import main.dto.ProductDto;
+import main.services.*;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -28,53 +33,76 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Api(value = "Online shopping cart")
-@RequestMapping(value = "/cart")
 public class CartController {
-
+    
+    @Autowired
     private CartService cartService;
+    
+    @Autowired
     private CartContentService cartContentService;
+    
+    @Autowired
     private CustomerService customerService;
     
     @Autowired
-    public void setCartService( CartService cartService, 
-                                CartContentService cartContentService, 
-                                CustomerService customerService){
-        this.cartService = cartService;
-        this.cartContentService = cartContentService;
-        this.customerService = customerService;
-    }
+    private ProductService productService;
+
+    @Autowired
+    private ModelMapper modelMapper;    
     
     @ApiOperation(value="View the complete list of carts")
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public List<Cart> listAllCarts(){
-        return this.cartService.listAllCarts();
+    @RequestMapping(value = "carts/", method = RequestMethod.GET)
+    @ResponseBody
+    public List<CartDto> listAllCarts(){
+        List<CartDto> aux = new ArrayList<>();
+        this.cartService.listAllCarts().forEach((cart) -> {
+            aux.add(this.convertToDto(cart));
+        });
+        return aux;
     }
     
     @ApiOperation(value="View cart by code matching")
-    @RequestMapping(value = "/show/{id}", method = RequestMethod.GET)
-    public Cart showCart(@PathVariable Integer id){
-        return this.cartService.getCartById(id);        
+    @RequestMapping(value = "carts/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public CartDto showCart(@PathVariable Integer id){
+        return this.convertToDto(this.cartService.getCartById(id));        
     }
     
     @ApiOperation(value="Add a cart")
-    @RequestMapping(value = "/", method = RequestMethod.PUT)
-    public String addCart(Cart cart){
-        this.cartService.saveCart(cart);
-        return "Product added sucessfully";
+    @RequestMapping(value = "cart/", method = RequestMethod.PUT)
+    @ResponseBody
+    public List<CartDto> addCart(CartDto cart) throws ParseException{
+        this.cartService.saveCart(this.convertToEntity(cart));
+        return this.listAllCarts();
     }
     
     @ApiOperation(value = "Remove a cart")
-    @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
-    public String deleteCart(@PathVariable Integer id){
+    @RequestMapping(value="cart/{id}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public List<CartDto> deleteCart(@PathVariable Integer id){
         this.cartService.deleteCart(id);
-        return "Product remove successfully";
+        return this.listAllCarts();
     }  
     
     @ApiOperation(value="Add a product to the cart")
-    @RequestMapping(value = "/{id}/{id_prod}", method = RequestMethod.PUT)
-    public String addCartContent(Product product){
+    @RequestMapping(value = "cart/{id}/product/{id_prod}/{quantity}", method = RequestMethod.PUT)
+    public String addCartContent(   @PathVariable Integer id, 
+                                    @PathVariable Integer id_prod, 
+                                    @PathVariable Integer quantity){
+        Cart auxC = this.cartService.getCartById(id);
+        Product auxP = this.productService.getProductById(id_prod);
         
+        CartContent auxCC = new CartContent(auxC, auxP, quantity);
+        this.cartContentService.saveCartContent(auxCC);
         return "Product added sucessfully";
+    }
+    
+    private CartDto convertToDto(Cart cart) {
+        return modelMapper.map(cart, CartDto.class);
+    }
+    
+    private Cart convertToEntity(CartDto cartDto) throws ParseException {
+        return modelMapper.map(cartDto, Cart.class);
     }
     
 }
