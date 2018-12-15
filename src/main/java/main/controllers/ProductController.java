@@ -42,7 +42,7 @@ public class ProductController {
     public List<ProductDto> listAllProducts(){
         List<ProductDto> aux = new ArrayList<>();
         this.productService.listAllProducts().forEach((product) -> {
-            aux.add(this.convertToDto(product));
+            aux.add(this.convertToDto(product,product.getId()));
         });
         return aux;
     }
@@ -51,7 +51,7 @@ public class ProductController {
     @RequestMapping(value = "products/{id}", method = RequestMethod.GET)    
     @ResponseBody
     public ProductDto showProduct(@PathVariable Integer id){
-        return this.convertToDto(productService.getProductById(id));        
+        return this.convertToDto(productService.getProductById(id),id);        
     }
     
     @ApiOperation(value="Add a product")
@@ -70,9 +70,9 @@ public class ProductController {
         return this.listAllProducts();
     }    
     
-    private ProductDto convertToDto(Product product) {
+    private ProductDto convertToDto(Product product, Integer id) {
         if (product == null)
-            throw  new ProductNotFoundException(0);
+            throw  new ProductNotFoundException(id);
         return modelMapper.map(product, ProductDto.class);
     }
     
