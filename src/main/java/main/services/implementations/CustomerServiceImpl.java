@@ -7,7 +7,7 @@ package main.services.implementations;
 
 import java.util.ArrayList;
 import java.util.List;
-import main.elements.Customer;
+import main.entity.Customer;
 import main.repository.CustomerRepository;
 import main.services.CustomerService;
 import org.slf4j.Logger;

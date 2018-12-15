@@ -10,7 +10,7 @@ package main.services;
  * @author nicob
  */
 
-import main.elements.Product;
+import main.entity.Product;
 import java.util.List;
 
 public interface ProductService {

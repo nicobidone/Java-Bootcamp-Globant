@@ -7,18 +7,22 @@ package main.services.implementations;
 
 import java.util.ArrayList;
 import java.util.List;
-import main.elements.CartContent;
+import java.util.Optional;
+import main.entity.CartContent;
+import main.entity.Product;
 import main.repository.CartContentRepository;
 import main.repository.ProductRepository;
 import main.services.CartContentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author nicob
  */
+@Service
 public class CartContentServiceImpl implements CartContentService{
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -66,8 +70,11 @@ public class CartContentServiceImpl implements CartContentService{
         logger.debug("deleteCart called");
         List<CartContent> aux = this.getCartContentsById(id);
         for (CartContent cartContent : aux) {
-            new ProductServiceImpl().editProductQuantity(cartContent.getId(),cartContent.getAmount());
+            Product auxP = productRepository.findById(cartContent.getId()).orElse(null);
+            
+            //No hacer esto -> new ProductServiceImpl().editProductQuantity(cartContent.getId(),cartContent.getAmount());
             cartContentRepository.deleteById(cartContent.getId());
+            auxP.setQuantity(id);
         }
     }
     

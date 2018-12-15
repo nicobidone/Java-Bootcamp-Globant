@@ -12,7 +12,7 @@ package main.services.implementations;
 
 import java.util.ArrayList;
 import java.util.List;
-import main.elements.Product;
+import main.entity.Product;
 import main.repository.ProductRepository;
 import main.services.ProductService;
 import org.slf4j.Logger;

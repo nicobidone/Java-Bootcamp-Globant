@@ -18,15 +18,6 @@ public class CustomerDto implements Serializable {
     
     private String lastName;
     
-    private List<CartDto> carts;
-
-    @Override
-    public String toString() {
-        return  "{" + 
-                "\"id\" : " + id + ",\n" +
-                "\"firstName\" : " + firstName + ",\n" + 
-                "\"lastName\" : " + lastName + ",\n" + 
-                "}";
-    }    
+    private List<CartDto> carts;   
     
 }

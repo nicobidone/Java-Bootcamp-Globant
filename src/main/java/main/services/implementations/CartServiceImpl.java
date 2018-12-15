@@ -7,7 +7,7 @@ package main.services.implementations;
 
 import java.util.ArrayList;
 import java.util.List;
-import main.elements.Cart;
+import main.entity.Cart;
 import main.repository.CartRepository;
 import main.services.CartService;
 import org.slf4j.Logger;

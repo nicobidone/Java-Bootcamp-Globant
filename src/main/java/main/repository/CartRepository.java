@@ -9,7 +9,7 @@ package main.repository;
  *
  * @author nicob
  */
-import main.elements.Cart;
+import main.entity.Cart;
 import org.springframework.data.repository.CrudRepository;
 
 public interface CartRepository extends CrudRepository<Cart, Integer> {}

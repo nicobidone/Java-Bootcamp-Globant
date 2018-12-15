@@ -6,7 +6,7 @@
 package main.services;
 
 import java.util.List;
-import main.elements.CartContent;
+import main.entity.CartContent;
 
 /**
  *
