@@ -2,14 +2,16 @@ package com.globant.bootcamp;
 
 
 
-import main.repository.ProductRepository;
+import com.globant.bootcamp.repository.CartContentRepository;
+import com.globant.bootcamp.repository.CartRepository;
+import com.globant.bootcamp.repository.CustomerRepository;
+import com.globant.bootcamp.repository.ProductRepository;
 import java.util.ArrayList;
 import java.util.List;
-import main.entity.Customer;
-import main.repository.*;
-import main.entity.Cart;
-import main.entity.CartContent;
-import main.entity.Product;
+import com.globant.bootcamp.entity.Customer;
+import com.globant.bootcamp.entity.Cart;
+import com.globant.bootcamp.entity.CartContent;
+import com.globant.bootcamp.entity.Product;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
